@@ -28,7 +28,6 @@ $layoutV = new view\LayoutView();
 //If user comes back from api.Telldus.com after login attempt. Will run LoginModel::getAccessToken()
 if(\login\model\LoginModel::getSessionVerificationTriedToLogIn())
 {
-    var_dump('hej');
     \login\model\LoginModel::getAccessToken();
     header('Location: ' . $_SERVER['PHP_SELF']);
     exit();

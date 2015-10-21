@@ -14,6 +14,7 @@ use login\model\LoginModel;
 class LoginFactory
 {
 
+    //Was used in production for simplicity
     public function createLoginModel()
     {
         return new LoginModel();
