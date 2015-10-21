@@ -1,0 +1,38 @@
+<?php
+
+/****************************************************
+INSTRUCTIONS:
+Fill in PUBLIC_KEY
+Fill in PRIVATE_KEY
+Fill in TOKEN
+Fill in TOKENSECRET
+
+define BASE_URL, so it points to getAccessToken.php
+
+
+Change this file name to common.php
+******************************************************/
+
+
+require dirname(__DIR__) . '/vendor/autoload.php';
+
+
+define('PUBLIC_KEY', '');
+define('PRIVATE_KEY', '');
+
+
+define('TOKEN', '');
+define('TOKENSECRET', '');
+
+define('URL', 'http://api.telldus.com'); //https should be used in production!
+define('REQUEST_TOKEN', constant('URL').'/oauth/requestToken');
+define('AUTHORIZE_TOKEN', constant('URL').'/oauth/authorize/');
+define('ACCESS_TOKEN', constant('URL').'/oauth/accessToken');
+define('REQUEST_URI', constant('URL').'/xml');
+
+//define('BASE_URL', 'http://'.$_SERVER["PHP_SELF"].dirname($_SERVER['REQUEST_URI']));
+
+
+define('TURNON', 1);
+define('TURNOFF', 2);
+define(('DIM'), 51);

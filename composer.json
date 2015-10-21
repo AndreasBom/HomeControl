@@ -1,0 +1,19 @@
+{
+  "name": "vendor_name/package_name",
+  "description": "description_text",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "author's name",
+      "email": "email@example.com"
+    }
+  ],
+  "require": {
+    "befool-inc/http_oauth": "0.2.x-dev",
+    "mnohosten/http_auth": "v1.0.0",
+    "bshaffer/oauth2-server-php": "2.x-dev",
+    "pear/auth": "1.6.4",
+    "iignatov/lightopenid": "1.0.0"
+  }
+}
