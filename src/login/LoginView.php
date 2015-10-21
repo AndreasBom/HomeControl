@@ -37,7 +37,7 @@ class LoginView
             <form method="get" class="form-group">
                 <input type="submit" class="btn btn-default margin-top" value="Logga in" name="'.self::$loginUser.'">
             </form>
-            <a href="'. self::$publicEntrance .'">Publik ingång--></a>
+            <a href="'. self::$publicEntrance .'">Publik ingång</a>
         </div>
         ';
         return $html;

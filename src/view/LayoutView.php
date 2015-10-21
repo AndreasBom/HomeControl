@@ -18,6 +18,7 @@ class LayoutView
 
     public function response($content)
     {
+
         echo '
             <!DOCTYPE html>
             <html>
@@ -29,7 +30,8 @@ class LayoutView
                     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
                     <link href="https://fonts.googleapis.com/css?family=Prosto+One" rel="stylesheet" type="text/css">
                     <link rel="stylesheet" href="src/css/stylesheet.css">
-                    <meta charset="utf-8">
+                    <meta charset="UTF-8">
+                    <!--<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">-->
                 </head>
                 <body>
                     <div class="container">

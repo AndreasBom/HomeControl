@@ -13,8 +13,8 @@ interface ILoginModel
 {
     public static function getSessionAccessToken();
     public static function getSessionAccessTokenSecret();
-    public function getSessionRequestToken();
-    public function getSessionRequestTokenSecret();
+    public static function getSessionRequestToken();
+    public static function getSessionRequestTokenSecret();
 
     public function login();
 

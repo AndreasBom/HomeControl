@@ -21,19 +21,24 @@ class AppView //implements IView
     private static $turnOff = 'turnOff';
     private static $dim = 'dim';
 
+    private $welcomeMessage = "<h2>Välkommen</h2><p>Du är inloggad<p/>";
     private $stateToPreform;
     private $content = '';
+
+    public function __construct()
+    {
+        if(empty($this->content))
+        {
+            $this->content = $this->welcomeMessage;
+        }
+        iconv(mb_detect_encoding($this->content, mb_detect_order(), true), "UTF-8", $this->content);
+    }
 
 
     //Turn on or turn off (returns 1 or 0)
     public function getStateToPreform()
     {
         return $this->stateToPreform;
-    }
-
-    public function didUserTryToLogOut()
-    {
-        return isset($_GET[self::$logout]);
     }
 
     public function didUserChangeStateOnDevice()
@@ -92,16 +97,24 @@ class AppView //implements IView
         return isset($_GET[self::$sensorMenu]);
     }
 
+    public function didUserTryToLogOut()
+    {
+        return isset($_GET[self::$logout]);
+    }
     /********* Menu end *************/
 
     public function renderAppContent()
     {
         return '<pre>
-               '.   $this->content.'
-                </pre>';
+               '.   $this->content. '
+                 </pre>';
 
     }
 
+    public function reLoadPage()
+    {
+        header('Location: ' . $_SERVER['PHP_SELF']);
+    }
 
     public function renderDeviceList($list)
     {

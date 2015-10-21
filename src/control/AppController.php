@@ -53,14 +53,6 @@ class AppController
             {
                 $this->device->turnOn($id);
             }
-
-
-            //FUNKAR INTE
-            /*if(isset($_GET))
-            {
-                header("Location: " . $_SERVER['PHP_SELF'] . "?device");
-            }*/
-
         }
 
         if($appV->didUserChooseSensorOnMenu())
@@ -70,6 +62,10 @@ class AppController
 
         }
 
+        if($appV->didUserTryToLogOut()) {
+            $loginM->logout();
+            $appV->reLoadPage();
+        }
         //After successful login, render HTML for menu and content
         $layoutV->renderMenu();
         return $appV->renderAppContent();
