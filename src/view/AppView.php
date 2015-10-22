@@ -109,7 +109,6 @@ class AppView //implements IView
 
     public function renderAppContent()
     {
-
         return '<pre>
                '.   $this->content. '
                  </pre>';
@@ -123,6 +122,11 @@ class AppView //implements IView
 
     public function renderListOfDevices($list)
     {
+        if($list == null)
+        {
+            return '';
+        }
+
         $ret = "<div class='row'>";
         $ret .= "<ul class='ul_none_decoration'>";
 
@@ -173,9 +177,9 @@ class AppView //implements IView
         $ret .= "</ul>";
         $ret .= "</div>";
 
+        return $ret;
 
-
-        $this->content = $ret;
+        //$this->content = $ret;
     }
 
 
@@ -236,11 +240,6 @@ class AppView //implements IView
         $this->content = $ret;
     }*/
 
-    public function checkStatus($list)
-    {
-
-    }
-
 
     public function renderSensorList($list)
     {
@@ -252,7 +251,7 @@ class AppView //implements IView
             $ret .= "<li class='listStyle'>";
             if(empty($sensor['name']))
             {
-                $name = "Namnlös";
+                $name = "No Name";
             }
             else
             {
@@ -278,10 +277,7 @@ class AppView //implements IView
         }
         $ret .= "</ul>";
         $ret .= "</div>";
-
-
-
-        $this->content = $ret;
+        return $ret;
     }
 
 

@@ -40,7 +40,7 @@ class LayoutView
 
                         </div>
                         '. self::$menu .'
-                        '. $content .'
+                        <pre>'. $content .'</pre>
                         <p class="'. $this->errorCss .'">'. $this->errorMessage .' </p>
                     </div>
 

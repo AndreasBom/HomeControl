@@ -33,13 +33,12 @@ class AppController
     public function runApp(AppView $appV, LayoutView $layoutV, ILoginModel $loginM)
     {
         $list = null;
-
+        $content = '';
         //'Enheter' on menu is pressed
         if($appV->didUserChooseDeviceOnMenu())
         {
             $list = $this->device->listDevices();
-            //$appV->renderDeviceList($list);
-            $appV->renderListOfDevices($list);
+            $content = $appV->renderListOfDevices($list);
         }
 
         if($appV->didUserChangeStateOnDevice())
@@ -55,25 +54,27 @@ class AppController
             {
                 $this->device->turnOn($id);
             }
-
-
         }
 
         if($appV->didUserChooseSensorOnMenu())
         {
             $list = $this->sensor->listSensors();
-            $appV->renderSensorList($list);
+            $content = $appV->renderSensorList($list);
 
         }
+
 
         if($appV->didUserTryToLogOut()) {
             $loginM->logout();
             $appV->reLoadPage();
         }
 
-        //After successful login, render HTML for menu and content
-        
+        //After successful login, render HTML for menu and return content to <body> in Layout
         $layoutV->renderMenu();
-        return $appV->renderAppContent();
+        return $content;
+
     }
+
+
+
 }
