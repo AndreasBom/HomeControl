@@ -17,7 +17,7 @@ class Device extends BaseREST
     private $arrayWithObjects;
     private $stateHasChangedFlag = false;
 
-    public function listDevices()
+    public function getListOfDevices()
     {
         $params = array('supportedMethods' => 1023);
         $response = $this->getResponse('/devices/list', $params);

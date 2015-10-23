@@ -30,48 +30,61 @@ class AppController
         $this->sensor = new Sensor();
     }
 
+    public function changeState(AppView $appV, LayoutView $layoutV, ILoginModel $loginM)
+    {
+
+    }
+
+
     public function runApp(AppView $appV, LayoutView $layoutV, ILoginModel $loginM)
     {
-        $list = null;
-        $content = '';
-        //'Enheter' on menu is pressed
-        if($appV->didUserChooseDeviceOnMenu())
-        {
-            $list = $this->device->listDevices();
-            $content = $appV->renderListOfDevices($list);
-        }
+        //Render Menu if user is logged in
+        $layoutV->renderMenu();
 
+        $list = '';
+        $bodyContent = '';
+
+
+        //Changing state
         if($appV->didUserChangeStateOnDevice())
         {
-            $id= $appV->getIdOnSelectedDevice();
-            $state = $appV->getStateToPreform();
+            if($appV->getStateToPreform() == 1)
+            {
 
-            if($state == 2)
-            {
-                $this->device->turnOff($id);
+                $this->device->turnOn($appV->getIdOnSelectedDevice());
             }
-            if($state == 1)
+            if($appV->getStateToPreform() == 2)
             {
-                $this->device->turnOn($id);
+                $this->device->turnOff($appV->getIdOnSelectedDevice());
             }
+        }
+
+
+        //collecting list of objects AFTER state is changed
+        if($appV->didUserChooseDeviceOnMenu())
+        {
+            $list = $this->device->getListOfDevices();
+            //HTMLifies list
+            $bodyContent = $appV->renderListOfDevices($list);
         }
 
         if($appV->didUserChooseSensorOnMenu())
         {
-            $list = $this->sensor->listSensors();
-            $content = $appV->renderSensorList($list);
-
+            $list = $this->sensor->getListOfSensors();
+            //HTMLifies list
+            $bodyContent = $appV->renderSensorList($list);
         }
 
-
-        if($appV->didUserTryToLogOut()) {
+        if($appV->didUserTryToLogOut())
+        {
             $loginM->logout();
-            $appV->reLoadPage();
         }
 
-        //After successful login, render HTML for menu and return content to <body> in Layout
-        $layoutV->renderMenu();
-        return $content;
+
+        //Returning content, that will go into layoutView as HTML
+        return $bodyContent;
+
+
 
     }
 

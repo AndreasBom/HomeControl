@@ -183,64 +183,6 @@ class AppView //implements IView
     }
 
 
-
-    /*public function renderDeviceList($list)
-    {
-        $ret = "<div class='row'>";
-        $ret .= "<ul class='ul_none_decoration'>";
-
-        foreach($list->device as $device)
-        {
-            $ret .= "<li class='listStyle'>";
-            $ret .= "<h3>" . $device['name'] . "</h3>";
-            $ret .= "<ul class='ul_none_decoration'>";
-            $ret .= "<li>";
-            $ret .= "<p>ID: " . $device['id'] . "</p>";
-            $ret .= "</li>";
-            $ret .= "<li>";
-            $ret .= "<p>Status: " . $this->castState($device['state']) . "</p>";
-            $ret .= "</li>";
-            $ret .= "<li>";
-
-            //Changes 'dimvärde' to 0 if device is either 100% on or  100% off
-            if($this->castState($device['state'] == 1) || $this->castState($device['state'] == 2))
-            {
-                $dimValue = 0;
-            }
-            else
-            {
-                $dimValue = $device['statevalue'];
-            }
-            if($device['methods'] == 35)
-            {
-                $readonly = 'readonly';
-                $cssTextBox = 'readonly';
-            }
-            else
-            {
-                $readonly = "";
-                $cssTextBox = '';
-
-            }
-
-            $ret .= "<p>Dim Value: <input type='text' class='". $cssTextBox ."' name='dimmer' size='3' maxlength='3' value='" . $dimValue. "'".$readonly."> <a class='btn btn-default btn-xs ". $cssTextBox ."' href='?device&dim=". $device["id"] ."&dimValue='>&#10004;</a></p>";
-            $ret .= "</li>";
-            $ret .= "<li>";
-            $ret .= "<p><a class='btn btn-xs ".$this->buttonStatusCss($device["state"])[0] ."' href='?device&turnOff=".$device["id"]."' >OFF</a>  <a class='btn btn-xs " .$this->buttonStatusCss($device["state"])[1] ."' href='?device&turnOn=".$device["id"]."'>ON</a> </p>";
-            $ret .= "</li>";
-            $ret .= "</ul>";
-            $ret .= "</li>";
-
-        }
-        $ret .= "</ul>";
-        $ret .= "</div>";
-
-
-
-        $this->content = $ret;
-    }*/
-
-
     public function renderSensorList($list)
     {
         $ret = "<div class='row'>";

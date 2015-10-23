@@ -17,6 +17,10 @@ require_once'./src/login/LoginFactory.php';
 require_once'./src/login/ILoginModel.php';
 
 
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
+
+
 session_start();
 $factory = new \login\LoginFactory();
 $loginM = $factory->createLoginModel();
@@ -34,7 +38,9 @@ if(\login\model\LoginModel::getSessionVerificationTriedToLogIn())
 }
 
 $loginC = new login\control\LoginController($loginM, $loginV, $appV, $layoutV);
-$loginC->doLogin();
+$body = $loginC->doLogin();
+
+$layoutV->response($body);
 
 
 

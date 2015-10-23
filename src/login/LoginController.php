@@ -71,15 +71,15 @@ class LoginController
         if($this->loginM->getSessionAccessToken() != null)
         {
             $body = $this->appC->runApp($this->appV, $this->layoutV, $this->loginM);
+            return $body;
         }
         //User is NOT logged in
         else
         {
-
             $body = $this->loginV->renderLoginView();
-
+            return $body;
         }
-        $this->layoutV->response($body);
+
 
     }
 }

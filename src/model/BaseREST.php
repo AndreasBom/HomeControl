@@ -20,10 +20,9 @@ abstract class BaseREST
     //Rest request
     public function getResponse($request, $params)
     {
-        if($this->consumer == null)
-        {
-            $this->consumer = new \HTTP_OAuth_Consumer(constant('PUBLIC_KEY'), constant('PRIVATE_KEY'), LoginModel::getSessionAccessToken(), LoginModel::getSessionAccessTokenSecret());
-        }
+
+        $this->consumer = new \HTTP_OAuth_Consumer(constant('PUBLIC_KEY'), constant('PRIVATE_KEY'), LoginModel::getSessionAccessToken(), LoginModel::getSessionAccessTokenSecret());
+
 
         $response = $this->consumer->sendRequest(constant('REQUEST_URI').$request,$params,'GET');
 
@@ -33,15 +32,14 @@ abstract class BaseREST
 
         $asString = simplexml_load_string($xmlResponse);
 
+
         return $asString;
     }
 
     public function sendResponse($request, $params)
     {
-        if($this->consumer == null)
-        {
-            $this->consumer = new \HTTP_OAuth_Consumer(constant('PUBLIC_KEY'), LoginModel::getSessionAccessToken(), LoginModel::getSessionAccessTokenSecret());
-        }
+        $this->consumer = new \HTTP_OAuth_Consumer(constant('PUBLIC_KEY'), LoginModel::getSessionAccessToken(), LoginModel::getSessionAccessTokenSecret());
+
 
 
         $this->consumer->sendRequest(constant('REQUEST_URI'). $request, $params, 'GET');
