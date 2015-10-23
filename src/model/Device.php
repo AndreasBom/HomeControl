@@ -13,25 +13,51 @@ require_once'BaseREST.php';
 
 class Device extends BaseREST
 {
+    private $stateFlag;
 
-    public function listDevices()
+    public function getListOfDevices()
     {
         $params = array('supportedMethods' => 1023);
         $response = $this->getResponse('/devices/list', $params);
         return $response;
+
+
     }
+
+/*
+    private function changeState($id)
+    {
+        $list = $this->getListOfDevices();
+
+        foreach($list as $l)
+        {
+            var_dump($l);
+            if($l->id == $id)
+            {
+                var_dump("hejjj");
+                die();
+            }
+        }
+
+        return $list;
+    }*/
 
     public function turnOn($id)
     {
         $params = array('id'=>$id);
-        $response = $this->sendResponse('/device/turnOn', $params);
+        $this->sendResponse('/device/turnOn', $params);
 
+
+        return $list;
     }
 
     public function turnOff($id)
     {
         $params = array('id'=>$id);
-        $response = $this->sendResponse('/device/turnOff', $params);
+        $this->sendResponse('/device/turnOff', $params);
+        $list = $this->getListOfDevices();
+        return $list;
+
 
     }
 

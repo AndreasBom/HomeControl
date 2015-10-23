@@ -32,13 +32,7 @@ class AppController
 
     public function runApp(AppView $appV, LayoutView $layoutV, ILoginModel $loginM)
     {
-        //'Enheter' on menu is pressed
-        if($appV->didUserChooseDeviceOnMenu())
-        {
-            $list = $this->device->listDevices();
-            $appV->renderDeviceList($list);
-        }
-
+        $list = '';
         if($appV->didUserChangeStateOnDevice())
         {
             $id= $appV->getIdOnSelectedDevice();
@@ -46,26 +40,26 @@ class AppController
 
             if($state == 2)
             {
-                $this->device->turnOff($id);
+                $list = $this->device->turnOff($id);
 
             }
             if($state == 1)
             {
-                $this->device->turnOn($id);
+                $list = $this->device->turnOn($id);
             }
 
+            $appV->renderDeviceList($list);
+        }
 
-            //FUNKAR INTE
-            /*if(isset($_GET))
-            {
-                header("Location: " . $_SERVER['PHP_SELF'] . "?device");
-            }*/
-
+        if($appV->didUserChooseDeviceOnMenu() && $appV->didUserChangeStateOnDevice() == false)
+        {
+            $list = $this->device->getListOfDevices();
+            $appV->renderDeviceList($list);
         }
 
         if($appV->didUserChooseSensorOnMenu())
         {
-            $list = $this->sensor->listSensors();
+            $list = $this->sensor->getListOfSensors();
             $appV->renderSensorList($list);
 
         }
