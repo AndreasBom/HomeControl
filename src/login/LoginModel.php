@@ -25,7 +25,13 @@ class LoginModel implements ILoginModel
     private static $accessTokenSecret = "LoginModel::accessTokenSecret";
     private static $requestToken = "LoginModel::RequestToken";
     private static $requestTokenSecret = "LoginModel::RequestTokenSecret";
+    private static $commingBackFromAuth = "LoginModel::CommingBackFromAuth";
 
+
+    public static function getSessionVerificationTriedToLogIn()
+    {
+        return isset($_SESSION[self::$commingBackFromAuth]);
+    }
 
     public static function getSessionAccessToken()
     {
@@ -73,14 +79,18 @@ class LoginModel implements ILoginModel
         return $this->getRequestToken();
     }
 
+    public function logout()
+    {
+        session_unset();
+    }
+
 
     public function getRequestToken()
     {
         try
         {
-
+            $_SESSION[self::$commingBackFromAuth] = true;
             $consumer = new \HTTP_OAuth_Consumer(constant('PUBLIC_KEY'), constant('PRIVATE_KEY'));
-
             $consumer->getRequestToken(constant('REQUEST_TOKEN'), constant('BASE_URL'));
 
             $_SESSION[self::$requestToken] = $consumer->getToken();
@@ -95,32 +105,20 @@ class LoginModel implements ILoginModel
         {
             throw new AuthErrorException();
         }
-
-
-
     }
 
     public static function getAccessToken()
     {
         try
         {
-
-            //$consumer = new \HTTP_OAuth_Consumer(constant('PUBLIC_KEY'), constant('PRIVATE_KEY'), $_SESSION[self::$requestToken], $_SESSION[self::$requestTokenSecret]);
-
-
-
+            unset($_SESSION[self::$commingBackFromAuth]);
             $consumer = new \HTTP_OAuth_Consumer(constant('PUBLIC_KEY'), constant('PRIVATE_KEY'), $_SESSION[self::$requestToken], $_SESSION[self::$requestTokenSecret]);
 
-
             $consumer->getAccessToken(constant('ACCESS_TOKEN'));
-
 
             $_SESSION[self::$accessToken] = $consumer->getToken();
             $_SESSION[self::$accessTokenSecret] = $consumer->getTokenSecret();
 
-
-
-            header('Location: ../../index.php');
             return true;
 
         }

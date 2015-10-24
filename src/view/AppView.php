@@ -13,17 +13,27 @@ namespace view;
 
 class AppView //implements IView
 {
-    private static $login = 'login';
     private static $logout = 'logout';
     private static $deviceMenu = 'device';
     private static $sensorMenu = 'sensor';
     private static $turnOn = 'turnOn';
     private static $turnOff = 'turnOff';
     private static $dim = 'dim';
+    public static $logoutMessage = "logOutMessage";
 
     private $stateToPreform;
     private $content = '';
 
+    public function redirect()
+    {
+        header('Location: ' . $_SERVER['PHP_SELF']);
+    }
+
+    //is used in index.php for doing a header location to ?device after a state on a device has changed
+    public function getDeviceMenuQuery()
+    {
+        return self::$deviceMenu;
+    }
 
     //Turn on or turn off (returns 1 or 0)
     public function getStateToPreform()
@@ -57,6 +67,7 @@ class AppView //implements IView
         return false;
     }
 
+    //Not in use
     public function getDimValue()
     {
         if(isset($_GET['dimValue']))
@@ -65,7 +76,7 @@ class AppView //implements IView
         }
     }
 
-
+    //gets the id from the query string and returns it. Example: url . ?device&turnOn=54323   || returns null
     public function getIdOnSelectedDevice()
     {
         if(isset($_GET['turnOn']))
@@ -78,6 +89,8 @@ class AppView //implements IView
         }
         return null;
     }
+
+
 
     /********** MENU *****************/
 
@@ -94,10 +107,14 @@ class AppView //implements IView
 
     /********* Menu end *************/
 
-    public function renderAppContent()
+    public function renderAppContent($content)
     {
+        if($content == '')
+        {
+            $content = '<h4>Welcome!</h4> <p> You are logged in</p>';
+        }
         return '<pre>
-               '.   $this->content.'
+               '. $content .'
                 </pre>';
 
     }
@@ -105,11 +122,19 @@ class AppView //implements IView
 
     public function renderDeviceList($list)
     {
+        if($list == null)
+        {
+            return "Something went wrong. Please try again";
+        }
+
         $ret = "<div class='row'>";
+
         $ret .= "<ul class='ul_none_decoration'>";
+        $ret .= "<h2>List of devices</h2>";
 
         foreach($list->device as $device)
         {
+
             $ret .= "<li class='listStyle'>";
             $ret .= "<h3>" . $device['name'] . "</h3>";
             $ret .= "<ul class='ul_none_decoration'>";
@@ -142,10 +167,10 @@ class AppView //implements IView
 
             }
 
-            $ret .= "<p>Dimmervärde: <input type='text' class='". $cssTextBox ."' name='dimmer' size='3' maxlength='3' value='" . $dimValue. "'".$readonly."> <a class='btn btn-default btn-xs ". $cssTextBox ."' href='?device&dim=". $device["id"] ."&dimValue='>&#10004;</a></p>";
+            $ret .= "<p>Dim Value: <form method='get'><input type='text' class='". $cssTextBox ."' name='dimmer' size='3' maxlength='3' value='" . $dimValue. "'".$readonly."> <a class='btn btn-default btn-xs ". $cssTextBox ."' href='#". $device["id"] ."&dimValue='>&#10004;</a></p></form> ";
             $ret .= "</li>";
             $ret .= "<li>";
-            $ret .= "<p><a class='btn btn-xs ".$this->buttonStatusCss($device["state"])[0] ."' href='?device&turnOff=".$device["id"]."' >AV</a>  <a class='btn btn-xs " .$this->buttonStatusCss($device["state"])[1] ."' href='?device&turnOn=".$device["id"]."'>PÅ</a> </p>";
+            $ret .= "<p><a class='btn btn-xs ".$this->buttonStatusCss($device["state"])[0] ."' href='?device&turnOff=".$device["id"]."' >OFF</a>  <a class='btn btn-xs " .$this->buttonStatusCss($device["state"])[1] ."' href='?device&turnOn=".$device["id"]."'>ON</a> </p>";
             $ret .= "</li>";
             $ret .= "</ul>";
             $ret .= "</li>";
@@ -156,20 +181,21 @@ class AppView //implements IView
 
 
 
-        $this->content = $ret;
+        return $ret;
     }
 
     public function renderSensorList($list)
     {
         $ret = "<div class='row'>";
         $ret .= "<ul class='ul_none_decoration'>";
+        $ret .= "<h2>List of sensors</h2>";
 
         foreach($list->sensor as $sensor)
         {
             $ret .= "<li class='listStyle'>";
             if(empty($sensor['name']))
             {
-                $name = "Namnlös";
+                $name = "No Name";
             }
             else
             {
@@ -181,13 +207,13 @@ class AppView //implements IView
             $ret .= "<p>ID: " . $sensor['id'] . "</p>";
             $ret .= "</li>";
             $ret .= "<li>";
-            $ret .= "<p>Uppdaterad: " . $this->convertDate((int)$sensor['lastUpdated']) . "</p>";
+            $ret .= "<p>Updated: " . $this->convertDate((int)$sensor['lastUpdated']) . "</p>";
             $ret .= "</li>";
             $ret .= "<li>";
-            $ret .= "<p>Temperatur: ". $sensor['temp']  ."&#176</p>";
+            $ret .= "<p>Temperature: ". $sensor['temp']  ."&#176</p>";
             $ret .= "</li>";
             $ret .= "<li>";
-            $ret .= "<p>Luftfuktighet: ". $sensor['humidity'] ."%</p>";
+            $ret .= "<p>Humidity: ". $sensor['humidity'] ."%</p>";
             $ret .= "</li>";
             $ret .= "</ul>";
             $ret .= "</li>";
@@ -198,7 +224,7 @@ class AppView //implements IView
 
 
 
-        $this->content = $ret;
+        return $ret;
     }
 
 
@@ -235,15 +261,15 @@ class AppView //implements IView
     {
         if($state == 1)
         {
-            return "PÅ";
+            return "ON";
         }
         if($state == 2)
         {
-            return "AV";
+            return "OFF";
         }
         if($state == 16)
         {
-            return "Dimmer aktiverad";
+            return "Dimmer aktivated";
         }
     }
 

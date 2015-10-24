@@ -8,37 +8,43 @@
 
 namespace login\view;
 
+use view\CookieStorage;
+
 require_once dirname(__DIR__) .'/view/IView.php';
-use view\IView;
+require_once './src/view/CookieStorage.php';
 
 class LoginView
 {
 
     private static $loginUser = "login";
-    private static $publicEntrance = "public";
-
 
     public function userTriesToLogin()
     {
         return isset($_GET[self::$loginUser]);
     }
 
-    public function userTriesToAccessPublicArea()
+    public function message()
     {
-        return isset($_GET[self::$publicEntrance]);
+        $s = new CookieStorage();
+        if($s->checkForMessage() == false)
+        {
+            return '<h4> Press button to log in</h4>';
+        }
+        $message = $s->getMessageAndDelete();
+        return $message;
     }
-
-
 
     public function renderLoginView()
     {
         $html = '
+
         <div class="btn_holder">
             <form method="get" class="form-group">
-                <input type="submit" class="btn btn-default margin-top" value="Logga in" name="'.self::$loginUser.'">
+                <h3>'. $this->message() .'</h3>
+                <input type="submit" class="btn btn-default margin-top" value="Log in" name="'.self::$loginUser.'">
             </form>
-            <a href="'. self::$publicEntrance .'">Publik ingång--></a>
         </div>
+
         ';
         return $html;
     }

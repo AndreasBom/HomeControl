@@ -15,6 +15,7 @@ require_once'./src/common.php';
 use login\ILoginModel;
 use model\Sensor;
 use view\AppView;
+use view\CookieStorage;
 use view\LayoutView;
 use view\Menu;
 use \model\Device;
@@ -33,39 +34,61 @@ class AppController
     public function runApp(AppView $appV, LayoutView $layoutV, ILoginModel $loginM)
     {
         $list = '';
-        if($appV->didUserChangeStateOnDevice())
-        {
-            $id= $appV->getIdOnSelectedDevice();
-            $state = $appV->getStateToPreform();
+        $bodyContent = '';
 
-            if($state == 2)
-            {
-                $list = $this->device->turnOff($id);
 
-            }
-            if($state == 1)
-            {
-                $list = $this->device->turnOn($id);
-            }
-
-            $appV->renderDeviceList($list);
-        }
-
-        if($appV->didUserChooseDeviceOnMenu() && $appV->didUserChangeStateOnDevice() == false)
+        if($appV->didUserChooseDeviceOnMenu())
         {
             $list = $this->device->getListOfDevices();
-            $appV->renderDeviceList($list);
+
+            if($appV->didUserChangeStateOnDevice())
+            {
+                $id= $appV->getIdOnSelectedDevice();
+                $state = $appV->getStateToPreform();
+
+                if($state == 2)
+                {
+                    $this->device->turnOff($id);
+
+                }
+                if($state == 1)
+                {
+                    $this->device->turnOn($id);
+                }
+
+                if($state = 51)
+                {
+                    //Not in use
+                    //$this->device->dim($id,$appV->getDimValue());
+                }
+            }
+
+            $bodyContent = $appV->renderDeviceList($list);
         }
 
         if($appV->didUserChooseSensorOnMenu())
         {
             $list = $this->sensor->getListOfSensors();
-            $appV->renderSensorList($list);
+            $bodyContent = $appV->renderSensorList($list);
+        }
+
+        if($appV->didUserTryToLogOut())
+        {
+            $s = new CookieStorage();
+            //Saves Logout message
+            $s->setMessage();
+            //Kills session
+            $loginM->logout();
+            $appV->redirect();
+
 
         }
 
-        //After successful login, render HTML for menu and content
+
+        $appV->renderDeviceList($list);
+
         $layoutV->renderMenu();
-        return $appV->renderAppContent();
+
+        return $appV->renderAppContent($bodyContent);
     }
 }

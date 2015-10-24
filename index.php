@@ -13,7 +13,6 @@ require_once 'src/login/LoginWithoutAuth.php';
 require_once'./src/view/AppView.php';
 require_once'./src/view/LayoutView.php';
 require_once'./src/login/LoginFactory.php';
-
 require_once'./src/login/ILoginModel.php';
 
 
@@ -27,8 +26,35 @@ $appV = new view\AppView();
 $layoutV = new view\LayoutView();
 
 
+//If user comes back from api.Telldus.com after login attempt. Will run LoginModel::getAccessToken()
+if(\login\model\LoginModel::getSessionVerificationTriedToLogIn())
+{
+    try
+    {
+        \login\model\LoginModel::getAccessToken();
+        header('Location: ' . $_SERVER['PHP_SELF']);
+        exit();
+    }
+    //on authorization failure, show error message
+    catch(\exceptions\AuthErrorException $ex)
+    {
+        $layoutV->setErrorMessage($ex->message());
+    }
+}
+
+
+
+//Mandatory for device state to be updated
+if(isset($_GET['turnOn']) || isset($_GET['turnOff']))
+{
+    header('Location: ' .$_SERVER['PHP_SELF'] . '?'.$appV->getDeviceMenuQuery());
+}
+
 
 $loginC = new login\control\LoginController($loginM, $loginV, $appV, $layoutV);
 $loginC->doLogin();
+
+
+
 
 

@@ -37,17 +37,13 @@ class LoginController
     private $appC;
 
 
-    public function __construct(/*LoginModel*/ $loginModel, LoginView $loginView, AppView $appView, LayoutView $layoutView)
+    public function __construct($loginModel, LoginView $loginView, AppView $appView, LayoutView $layoutView)
     {
         $this->loginM = $loginModel;
         $this->loginV = $loginView;
         $this->appV = $appView;
         $this->layoutV = $layoutView;
         $this->appC = new AppController();
-
-
-
-
     }
 
     public function doLogin()
@@ -70,15 +66,6 @@ class LoginController
             }
         }
 
-
-
-        if($this->appV->didUserTryToLogOut())
-        {
-            session_destroy();
-            header('Location: ' . $_SERVER['PHP_SELF']);
-        }
-
-
         //User is NOT logged in
         if($this->loginM->getSessionAccessToken() == null)
         {
@@ -94,4 +81,7 @@ class LoginController
 
         $this->layoutV->response($body);
     }
+
+
+
 }

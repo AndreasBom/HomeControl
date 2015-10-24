@@ -13,6 +13,6 @@ class AuthErrorException extends \Exception
 {
     public function message()
     {
-        return "Error while trying to connect to authorization provider. Check your internet connection.";
+        return "Error while trying to connect to authorization provider. Please try again";
     }
 }

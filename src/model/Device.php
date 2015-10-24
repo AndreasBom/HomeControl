@@ -24,18 +24,25 @@ class Device extends BaseREST
 
     }
 
-/*
-    private function changeState($id)
+
+    /*private function changeState($id)
     {
         $list = $this->getListOfDevices();
 
         foreach($list as $l)
         {
-            var_dump($l);
-            if($l->id == $id)
+
+            if($l[$id] == $id)
             {
-                var_dump("hejjj");
-                die();
+
+                if($l['state'] == 1)
+                {
+                    $l['state'] == 2;
+                }
+                else
+                {
+                    $l['state'] == 1;
+                }
             }
         }
 
@@ -46,26 +53,23 @@ class Device extends BaseREST
     {
         $params = array('id'=>$id);
         $this->sendResponse('/device/turnOn', $params);
-
-
-        return $list;
+        //return $this->changeState($id);
     }
 
     public function turnOff($id)
     {
         $params = array('id'=>$id);
         $this->sendResponse('/device/turnOff', $params);
-        $list = $this->getListOfDevices();
-        return $list;
-
+        //return $this->changeState($id);
 
     }
 
     public function dim($id, $dimValue)
     {
         $params = array('id'=>$id, 'level'=>$dimValue);
-        $response = $this->sendResponse('device/dim', $params);
+        $this->sendResponse('device/dim', $params);
 
+        //return $this->changeState()
     }
 
 
