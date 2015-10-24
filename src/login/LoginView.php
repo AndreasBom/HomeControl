@@ -15,20 +15,12 @@ class LoginView
 {
 
     private static $loginUser = "login";
-    private static $publicEntrance = "public";
 
 
     public function userTriesToLogin()
     {
         return isset($_GET[self::$loginUser]);
     }
-
-    public function userTriesToAccessPublicArea()
-    {
-        return isset($_GET[self::$publicEntrance]);
-    }
-
-
 
     public function renderLoginView()
     {
@@ -37,7 +29,6 @@ class LoginView
             <form method="get" class="form-group">
                 <input type="submit" class="btn btn-default margin-top" value="Logga in" name="'.self::$loginUser.'">
             </form>
-            <a href="'. self::$publicEntrance .'">Publik ingång--></a>
         </div>
         ';
         return $html;

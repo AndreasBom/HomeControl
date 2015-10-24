@@ -44,15 +44,10 @@ class LoginController
         $this->appV = $appView;
         $this->layoutV = $layoutView;
         $this->appC = new AppController();
-
-
-
-
     }
 
     public function doLogin()
     {
-
 
         if($this->loginV->userTriesToLogin())
         {
@@ -72,23 +67,17 @@ class LoginController
 
 
 
-        if($this->appV->didUserTryToLogOut())
-        {
-            session_destroy();
-            header('Location: ' . $_SERVER['PHP_SELF']);
-        }
-
-
-        //User is NOT logged in
-        if($this->loginM->getSessionAccessToken() == null)
-        {
-            $body = $this->loginV->renderLoginView();
-        }
         //User IS logged in
+        if($this->loginM->getSessionAccessToken() != null)
+        {
+            $body = $this->appC->runApp($this->appV, $this->layoutV, $this->loginM);
+
+        }
+        //User is NOT logged in
         else
         {
 
-            $body = $this->appC->runApp($this->appV, $this->layoutV, $this->loginM);
+            $body = $this->loginV->renderLoginView();
         }
 
 

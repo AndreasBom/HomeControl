@@ -32,11 +32,14 @@ class AppController
 
     public function runApp(AppView $appV, LayoutView $layoutV, ILoginModel $loginM)
     {
+        $list = null;
+
         //'Enheter' on menu is pressed
         if($appV->didUserChooseDeviceOnMenu())
         {
             $list = $this->device->listDevices();
-            $appV->renderDeviceList($list);
+            //$appV->renderDeviceList($list);
+            $appV->renderListOfDevices($list);
         }
 
         if($appV->didUserChangeStateOnDevice())
@@ -47,19 +50,12 @@ class AppController
             if($state == 2)
             {
                 $this->device->turnOff($id);
-
             }
             if($state == 1)
             {
                 $this->device->turnOn($id);
             }
 
-
-            //FUNKAR INTE
-            /*if(isset($_GET))
-            {
-                header("Location: " . $_SERVER['PHP_SELF'] . "?device");
-            }*/
 
         }
 
@@ -70,7 +66,13 @@ class AppController
 
         }
 
+        if($appV->didUserTryToLogOut()) {
+            $loginM->logout();
+            $appV->reLoadPage();
+        }
+
         //After successful login, render HTML for menu and content
+        
         $layoutV->renderMenu();
         return $appV->renderAppContent();
     }

@@ -13,7 +13,6 @@ namespace view;
 
 class AppView //implements IView
 {
-    private static $login = 'login';
     private static $logout = 'logout';
     private static $deviceMenu = 'device';
     private static $sensorMenu = 'sensor';
@@ -21,19 +20,29 @@ class AppView //implements IView
     private static $turnOff = 'turnOff';
     private static $dim = 'dim';
 
+    private $welcomeMessage = "<h2>Welcome</h2><p>You are logged in<p/>";
     private $stateToPreform;
     private $content = '';
 
+    public function __construct()
+    {
+        //Show after login
+        if(empty($this->content))
+        {
+            $this->content = $this->welcomeMessage;
+        }
+
+    }
+
+    public function clearContent()
+    {
+        $this->content = '';
+    }
 
     //Turn on or turn off (returns 1 or 0)
     public function getStateToPreform()
     {
         return $this->stateToPreform;
-    }
-
-    public function didUserTryToLogOut()
-    {
-        return isset($_GET[self::$logout]);
     }
 
     public function didUserChangeStateOnDevice()
@@ -92,18 +101,86 @@ class AppView //implements IView
         return isset($_GET[self::$sensorMenu]);
     }
 
+    public function didUserTryToLogOut()
+    {
+        return isset($_GET[self::$logout]);
+    }
     /********* Menu end *************/
 
     public function renderAppContent()
     {
+
         return '<pre>
-               '.   $this->content.'
-                </pre>';
+               '.   $this->content. '
+                 </pre>';
 
     }
 
+    public function reLoadPage()
+    {
+        header('Location: ' . $_SERVER['PHP_SELF']);
+    }
 
-    public function renderDeviceList($list)
+    public function renderListOfDevices($list)
+    {
+        $ret = "<div class='row'>";
+        $ret .= "<ul class='ul_none_decoration'>";
+
+        foreach($list as $device)
+        {
+            $ret .= "<li class='listStyle'>";
+            $ret .= "<h3>" . $device->name . "</h3>";
+            $ret .= "<ul class='ul_none_decoration'>";
+            $ret .= "<li>";
+            $ret .= "<p>ID: " . $device->id . "</p>";
+            $ret .= "</li>";
+            $ret .= "<li>";
+            $ret .= "<p>Status: " . $this->castState($device->state) . "</p>";
+            $ret .= "</li>";
+            $ret .= "<li>";
+
+            //Changes 'dimvärde' to 0 if device is either 100% on or  100% off
+            if($this->castState($device->state == 1) || $this->castState($device->state == 2))
+            {
+                $dimValue = 0;
+
+            }
+            else
+            {
+                $dimValue = $device->stateValue;
+            }
+            if($device->method == 35)
+            {
+                $readonly = 'readonly';
+                $cssTextBox = 'readonly';
+            }
+            else
+            {
+                $readonly = "";
+                $cssTextBox = '';
+
+            }
+
+            $ret .= "<p>Dim Value: <input type='text' class='". $cssTextBox ."' name='dimmer' size='3' maxlength='3' value='" . $dimValue. "' " .$readonly. "> <a class='btn btn-default btn-xs ". $cssTextBox ."' href='?device&dim=". $device->id ."&dimValue='>&#10004;</a></p>";
+            $ret .= "</li>";
+            $ret .= "<li>";
+            $ret .= "<p><a class='btn btn-xs ".$this->buttonStatusCss($device->state)[0] ."' href='?device&turnOff=".$device->id."' >OFF</a>  <a class='btn btn-xs " .$this->buttonStatusCss($device->state)[1] ."' href='?device&turnOn=".$device->id."'>ON</a> </p>";
+            $ret .= "</li>";
+            $ret .= "</ul>";
+            $ret .= "</li>";
+
+        }
+        $ret .= "</ul>";
+        $ret .= "</div>";
+
+
+
+        $this->content = $ret;
+    }
+
+
+
+    /*public function renderDeviceList($list)
     {
         $ret = "<div class='row'>";
         $ret .= "<ul class='ul_none_decoration'>";
@@ -142,10 +219,10 @@ class AppView //implements IView
 
             }
 
-            $ret .= "<p>Dimmervärde: <input type='text' class='". $cssTextBox ."' name='dimmer' size='3' maxlength='3' value='" . $dimValue. "'".$readonly."> <a class='btn btn-default btn-xs ". $cssTextBox ."' href='?device&dim=". $device["id"] ."&dimValue='>&#10004;</a></p>";
+            $ret .= "<p>Dim Value: <input type='text' class='". $cssTextBox ."' name='dimmer' size='3' maxlength='3' value='" . $dimValue. "'".$readonly."> <a class='btn btn-default btn-xs ". $cssTextBox ."' href='?device&dim=". $device["id"] ."&dimValue='>&#10004;</a></p>";
             $ret .= "</li>";
             $ret .= "<li>";
-            $ret .= "<p><a class='btn btn-xs ".$this->buttonStatusCss($device["state"])[0] ."' href='?device&turnOff=".$device["id"]."' >AV</a>  <a class='btn btn-xs " .$this->buttonStatusCss($device["state"])[1] ."' href='?device&turnOn=".$device["id"]."'>PÅ</a> </p>";
+            $ret .= "<p><a class='btn btn-xs ".$this->buttonStatusCss($device["state"])[0] ."' href='?device&turnOff=".$device["id"]."' >OFF</a>  <a class='btn btn-xs " .$this->buttonStatusCss($device["state"])[1] ."' href='?device&turnOn=".$device["id"]."'>ON</a> </p>";
             $ret .= "</li>";
             $ret .= "</ul>";
             $ret .= "</li>";
@@ -157,7 +234,13 @@ class AppView //implements IView
 
 
         $this->content = $ret;
+    }*/
+
+    public function checkStatus($list)
+    {
+
     }
+
 
     public function renderSensorList($list)
     {
@@ -235,15 +318,15 @@ class AppView //implements IView
     {
         if($state == 1)
         {
-            return "PÅ";
+            return "ON";
         }
         if($state == 2)
         {
-            return "AV";
+            return "OFF";
         }
         if($state == 16)
         {
-            return "Dimmer aktiverad";
+            return "Dimmer is activated";
         }
     }
 

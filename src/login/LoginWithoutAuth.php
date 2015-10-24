@@ -39,7 +39,7 @@ class LoginWithoutAuth implements ILoginModel
         return null;
     }
 
-    public function getSessionRequestToken()
+    public static function getSessionRequestToken()
     {
         if(isset($_SESSION[self::$requestToken]))
         {
@@ -49,7 +49,7 @@ class LoginWithoutAuth implements ILoginModel
         return null;
     }
 
-    public function getSessionRequestTokenSecret()
+    public static function getSessionRequestTokenSecret()
     {
         if(isset($_SESSION[self::$requestTokenSecret]))
         {

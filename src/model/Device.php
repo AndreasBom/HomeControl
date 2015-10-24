@@ -10,35 +10,56 @@ namespace model;
 
 require_once dirname(__DIR__) . '/common.php';
 require_once'BaseREST.php';
+require_once'DeviceModel.php';
 
 class Device extends BaseREST
 {
+    private $arrayWithObjects;
+    private $stateHasChangedFlag = false;
 
     public function listDevices()
     {
         $params = array('supportedMethods' => 1023);
         $response = $this->getResponse('/devices/list', $params);
-        return $response;
+
+        foreach($response as $item)
+        {
+            $obj = new DeviceModel($item['name'], $item['id'], $item['state'], $item['statevalue'], $item['method']);
+            $this->arrayWithObjects[] = $obj;
+        }
+
+
+        return $this->arrayWithObjects;
+    }
+
+    public function stateHasChanged()
+    {
+        return $this->stateHasChangedFlag;
     }
 
     public function turnOn($id)
     {
         $params = array('id'=>$id);
-        $response = $this->sendResponse('/device/turnOn', $params);
+        $this->sendResponse('/device/turnOn', $params);
+        $this->stateHasChangedFlag = true;
 
     }
+
 
     public function turnOff($id)
     {
         $params = array('id'=>$id);
-        $response = $this->sendResponse('/device/turnOff', $params);
+        $this->sendResponse('/device/turnOff', $params);
+        $this->stateHasChangedFlag = true;
 
     }
 
     public function dim($id, $dimValue)
     {
         $params = array('id'=>$id, 'level'=>$dimValue);
-        $response = $this->sendResponse('device/dim', $params);
+        $this->sendResponse('device/dim', $params);
+        $this->stateHasChangedFlag = true;
+
 
     }
 
