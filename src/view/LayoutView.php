@@ -16,6 +16,8 @@ class LayoutView
     private $errorCss = '';
     private static $menu;
 
+
+
     public function response($content)
     {
 
@@ -23,8 +25,8 @@ class LayoutView
             <!DOCTYPE html>
             <html>
                 <head>
-                    <title>Telldus Home Automatization </title>
-                    <!-- Latest compiled and minified CSS -->
+                    <title>Home Control</title>
+                    <!-- Bootstrap compiled and minified CSS -->
                     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
                     <!-- Optional theme -->
                     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">

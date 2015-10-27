@@ -23,7 +23,15 @@ class LoginModel implements ILoginModel
     private static $requestToken = "LoginModel::RequestToken";
     private static $requestTokenSecret = "LoginModel::RequestTokenSecret";
     private static $commingBackFromAuth = "LoginModel::CommingBackFromAuth";
+<<<<<<< HEAD
 
+=======
+>>>>>>> third
+
+    public static function getSessionVerificationTriedToLogIn()
+    {
+        return isset($_SESSION[self::$commingBackFromAuth]);
+    }
 
     public static function getSessionVerificationTriedToLogIn()
     {
@@ -78,8 +86,11 @@ class LoginModel implements ILoginModel
     public function logout()
     {
         session_unset();
+<<<<<<< HEAD
         session_destroy();
         $_SESSION[self::$accessToken] = null;
+=======
+>>>>>>> third
     }
 
 
@@ -87,8 +98,11 @@ class LoginModel implements ILoginModel
     {
         try
         {
+<<<<<<< HEAD
+=======
+            $_SESSION[self::$commingBackFromAuth] = true;
+>>>>>>> third
             $consumer = new \HTTP_OAuth_Consumer(constant('PUBLIC_KEY'), constant('PRIVATE_KEY'));
-
             $consumer->getRequestToken(constant('REQUEST_TOKEN'), constant('BASE_URL'));
 
             $_SESSION[self::$requestToken] = $consumer->getToken();
@@ -104,31 +118,33 @@ class LoginModel implements ILoginModel
         {
             throw new AuthErrorException();
         }
-
-
-
     }
 
     public static function getAccessToken()
     {
         try
         {
+<<<<<<< HEAD
 
             //$consumer = new \HTTP_OAuth_Consumer(constant('PUBLIC_KEY'), constant('PRIVATE_KEY'), $_SESSION[self::$requestToken], $_SESSION[self::$requestTokenSecret]);
 
             unset($_SESSION[self::$commingBackFromAuth]);
 
 
+=======
+            unset($_SESSION[self::$commingBackFromAuth]);
+>>>>>>> third
             $consumer = new \HTTP_OAuth_Consumer(constant('PUBLIC_KEY'), constant('PRIVATE_KEY'), $_SESSION[self::$requestToken], $_SESSION[self::$requestTokenSecret]);
 
-
             $consumer->getAccessToken(constant('ACCESS_TOKEN'));
-
 
             $_SESSION[self::$accessToken] = $consumer->getToken();
             $_SESSION[self::$accessTokenSecret] = $consumer->getTokenSecret();
 
+<<<<<<< HEAD
             //header('Location: ../../index.php');
+=======
+>>>>>>> third
             return true;
 
         }

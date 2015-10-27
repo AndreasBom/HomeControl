@@ -14,11 +14,11 @@ class Menu
     public function getMenu()
     {
         $menu = '<nav class="navbar navbar-default ">
-                    <div class="container-fluid">
+                    <div class="container-fluid ">
                         <ul class="nav navbar-nav ">
-                            <li class=""><a href="?device">Enheter</a></li>
-                            <li class=""><a href="?sensor">Sensorer</a> </li>
-                            <li class=""><a href="?logout">Logga ut</a> </li>
+                            <li class=""><a href="?device">Device</a></li>
+                            <li class=""><a href="?sensor">Sensor</a> </li>
+                            <li class=""><a href="?logout">Logout</a> </li>
                         </ul>
                     </div>
                 </nav>

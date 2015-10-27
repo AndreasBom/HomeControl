@@ -17,7 +17,7 @@ abstract class BaseREST
     protected $consumer;
 
 
-    //Rest request
+    //REST request that gets a list of requested device/sensor
     public function getResponse($request, $params)
     {
         if($this->consumer == null)
@@ -36,6 +36,7 @@ abstract class BaseREST
         return $asString;
     }
 
+    //REST request that changes state
     public function sendResponse($request, $params)
     {
         if($this->consumer == null)

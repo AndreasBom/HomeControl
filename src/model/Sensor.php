@@ -12,7 +12,7 @@ namespace model;
 class Sensor extends BaseREST
 {
 
-    public function listSensors()
+    public function getListOfSensors()
     {
         $params = array('includeValues' => 1);
         $response = $this->getResponse('/sensors/list', $params);

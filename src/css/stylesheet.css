@@ -24,9 +24,30 @@
 
 .btn_holder
 {
-
+    /*display: block;
+    width: 300px;
+    height: 250px;
+    margin: auto;*/
     text-align: center;
     align-content: center;
+    /*padding: 10px;
+    border:1px solid cadetblue;
+    border-radius: 10px;
+    background-color:ghostwhite;
+    box-shadow: darkslategrey;
+*/
+}
+
+.bg
+{
+    background-color: aliceblue;
+    border: 1px solid cornsilk;
+    border-radius: 10px;
+}
+
+pre
+{
+    font-family: Georgia, sans-serif;
 }
 
 .ul_none_decoration
@@ -72,6 +93,11 @@
 {
     background-color: lightgray;
     color: lightgray;
+}
+
+pre
+{
+    overflow-x: hidden;
 }
 
 

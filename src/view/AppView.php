@@ -19,6 +19,7 @@ class AppView //implements IView
     private static $turnOn = 'turnOn';
     private static $turnOff = 'turnOff';
     private static $dim = 'dim';
+    public static $logoutMessage = "logOutMessage";
 
     private $welcomeMessage = "<h2>Welcome</h2><p>You are logged in<p/>";
     private $stateToPreform;
@@ -32,9 +33,33 @@ class AppView //implements IView
             $this->content = $this->welcomeMessage;
         }
 
+<<<<<<< HEAD
     }
 
     public function clearContent()
+=======
+    public function runAccessScript()
+    {
+        //If user comes back from api.Telldus.com after login attempt. Will run LoginModel::getAccessToken()
+        \login\model\LoginModel::getAccessToken();
+        header('Location: ' . $_SERVER['PHP_SELF']);
+    }
+
+
+    public function redirect()
+    {
+        header('Location: ' . $_SERVER['PHP_SELF']);
+    }
+
+    //is used in index.php for doing a header location to ?device after a state on a device has changed
+    public function getDeviceMenuQuery()
+    {
+        return self::$deviceMenu;
+    }
+
+    //Turn on or turn off (returns 1 or 0)
+    public function getStateToPreform()
+>>>>>>> third
     {
         $this->content = '';
     }
@@ -66,6 +91,7 @@ class AppView //implements IView
         return false;
     }
 
+    //Not in use
     public function getDimValue()
     {
         if(isset($_GET['dimValue']))
@@ -74,7 +100,7 @@ class AppView //implements IView
         }
     }
 
-
+    //gets the id from the query string and returns it. Example: url . ?device&turnOn=54323   || returns null
     public function getIdOnSelectedDevice()
     {
         if(isset($_GET['turnOn']))
@@ -87,6 +113,8 @@ class AppView //implements IView
         }
         return null;
     }
+
+
 
     /********** MENU *****************/
 
@@ -107,12 +135,22 @@ class AppView //implements IView
     }
     /********* Menu end *************/
 
-    public function renderAppContent()
+    public function renderAppContent($content)
     {
+<<<<<<< HEAD
 
         return '<pre>
                '.   $this->content. '
                  </pre>';
+=======
+        if($content == '')
+        {
+            $content = '<h4>Welcome!</h4> <p> You are logged in</p>';
+        }
+        return '<pre>
+               '. $content .'
+                </pre>';
+>>>>>>> third
 
     }
 
@@ -182,11 +220,19 @@ class AppView //implements IView
 
     /*public function renderDeviceList($list)
     {
+        if($list == null)
+        {
+            return "Something went wrong. Please try again";
+        }
+
         $ret = "<div class='row'>";
+
         $ret .= "<ul class='ul_none_decoration'>";
+        $ret .= "<h2>List of devices</h2>";
 
         foreach($list->device as $device)
         {
+
             $ret .= "<li class='listStyle'>";
             $ret .= "<h3>" . $device['name'] . "</h3>";
             $ret .= "<ul class='ul_none_decoration'>";
@@ -219,7 +265,11 @@ class AppView //implements IView
 
             }
 
+<<<<<<< HEAD
             $ret .= "<p>Dim Value: <input type='text' class='". $cssTextBox ."' name='dimmer' size='3' maxlength='3' value='" . $dimValue. "'".$readonly."> <a class='btn btn-default btn-xs ". $cssTextBox ."' href='?device&dim=". $device["id"] ."&dimValue='>&#10004;</a></p>";
+=======
+            $ret .= "<p>Dim Value: <form method='get'><input type='text' class='". $cssTextBox ."' name='dimmer' size='3' maxlength='3' value='" . $dimValue. "'".$readonly."> <a class='btn btn-default btn-xs ". $cssTextBox ."' href='#". $device["id"] ."&dimValue='>&#10004;</a></p></form> ";
+>>>>>>> third
             $ret .= "</li>";
             $ret .= "<li>";
             $ret .= "<p><a class='btn btn-xs ".$this->buttonStatusCss($device["state"])[0] ."' href='?device&turnOff=".$device["id"]."' >OFF</a>  <a class='btn btn-xs " .$this->buttonStatusCss($device["state"])[1] ."' href='?device&turnOn=".$device["id"]."'>ON</a> </p>";
@@ -233,26 +283,84 @@ class AppView //implements IView
 
 
 
+<<<<<<< HEAD
         $this->content = $ret;
     }*/
 
     public function checkStatus($list)
     {
 
+=======
+        return $ret;
+>>>>>>> third
     }
 
 
     public function renderSensorList($list)
     {
+        $windsensorList = array();
+
         $ret = "<div class='row'>";
         $ret .= "<ul class='ul_none_decoration'>";
+        $ret .= "<h2>List of sensors</h2>";
 
         foreach($list->sensor as $sensor)
+        {
+            if($sensor['wavg'] != null)
+            {
+                //Saves wind sensors in a sepetate list that is processed after this for loop
+                $windsensorList[] = $sensor;
+            }
+            else
+            {
+                $ret .= "<li class='listStyle'>";
+                if(empty($sensor['name']))
+                {
+                    $name = "No Name";
+                }
+                else
+                {
+                    $name = utf8_decode($sensor['name']);
+                }
+                $ret .= "<h3>" . $name . "</h3>";
+                $ret .= "<ul class='ul_none_decoration diminishedTab'>";
+                $ret .= "<li>";
+                $ret .= "<p>ID: " . $sensor['id'] . "</p>";
+                $ret .= "</li>";
+                $ret .= "<li>";
+                $ret .= "<p>Updated: " . $this->convertDate((int)$sensor['lastUpdated']) . "</p>";
+                $ret .= "</li>";
+                $ret .= "<li>";
+                $ret .= "<p>Temperature: ". $sensor['temp']  ."&#176</p>";
+                $ret .= "</li>";
+                $ret .= "<li>";
+                $ret .= "<p>Humidity: ". $sensor['humidity'] ."%</p>";
+                $ret .= "</li>";
+                $ret .= "</ul>";
+                $ret .= "</li>";
+            }
+
+
+
+        }
+        //adding wind sensors
+        $ret .= $this->renderWindSensor($windsensorList);
+        $ret .= "</ul>";
+        $ret .= "</div>";
+
+        return $ret;
+    }
+
+    //If the sensor is a wind meter
+    private function renderWindSensor($list)
+    {
+        $ret = '';
+        foreach($list as $sensor)
         {
             $ret .= "<li class='listStyle'>";
             if(empty($sensor['name']))
             {
-                $name = "Namnlös";
+                $name = "No Name";
             }
             else
             {
@@ -264,24 +372,23 @@ class AppView //implements IView
             $ret .= "<p>ID: " . $sensor['id'] . "</p>";
             $ret .= "</li>";
             $ret .= "<li>";
-            $ret .= "<p>Uppdaterad: " . $this->convertDate((int)$sensor['lastUpdated']) . "</p>";
+            $ret .= "<p>Updated: " . $this->convertDate((int)$sensor['lastUpdated']) . "</p>";
             $ret .= "</li>";
             $ret .= "<li>";
-            $ret .= "<p>Temperatur: ". $sensor['temp']  ."&#176</p>";
+            $ret .= "<p>Wind: ". $sensor['wavg']  ." m/s</p>";
             $ret .= "</li>";
             $ret .= "<li>";
-            $ret .= "<p>Luftfuktighet: ". $sensor['humidity'] ."%</p>";
+            $ret .= "<p>Gust: ". $sensor['wgust'] ." m/s</p>";
+            $ret .= "</li>";
+            $ret .= "<li>";
+            $ret .= "<p>Wind dir: ". $sensor['wdir'] ."&#176</p>";
             $ret .= "</li>";
             $ret .= "</ul>";
             $ret .= "</li>";
-
         }
-        $ret .= "</ul>";
-        $ret .= "</div>";
 
+        return $ret;
 
-
-        $this->content = $ret;
     }
 
 
@@ -295,6 +402,7 @@ class AppView //implements IView
 
     private function buttonStatusCss($deviceStatus)
     {
+        //appling css depending on state.
         if($deviceStatus == 1)
         {
             $cssArray = array("btn-default", "btn-success");
@@ -326,7 +434,11 @@ class AppView //implements IView
         }
         if($state == 16)
         {
+<<<<<<< HEAD
             return "Dimmer is activated";
+=======
+            return "Dimmer aktivated";
+>>>>>>> third
         }
     }
 

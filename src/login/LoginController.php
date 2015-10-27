@@ -9,7 +9,7 @@
 namespace login\control;
 
 require_once'./src/login/LoginModel.php';
-require_once'./src/login/LoginWithoutAuth.php';
+
 require_once'./src/login/LoginView.php';
 require_once'./src/model/Device.php';
 require_once'./src/control/AppController.php';
@@ -37,7 +37,7 @@ class LoginController
     private $appC;
 
 
-    public function __construct(/*LoginModel*/ $loginModel, LoginView $loginView, AppView $appView, LayoutView $layoutView)
+    public function __construct($loginModel, LoginView $loginView, AppView $appView, LayoutView $layoutView)
     {
         $this->loginM = $loginModel;
         $this->loginV = $loginView;
@@ -65,6 +65,7 @@ class LoginController
             }
         }
 
+<<<<<<< HEAD
 
 
         //User IS logged in
@@ -72,6 +73,12 @@ class LoginController
         {
             $body = $this->appC->runApp($this->appV, $this->layoutV, $this->loginM);
 
+=======
+        //User is NOT logged in
+        if($this->loginM->getSessionAccessToken() == null)
+        {
+            $body = $this->loginV->renderLoginView();
+>>>>>>> third
         }
         //User is NOT logged in
         else
@@ -83,4 +90,7 @@ class LoginController
 
         $this->layoutV->response($body);
     }
+
+
+
 }
