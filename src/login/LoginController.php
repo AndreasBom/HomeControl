@@ -9,7 +9,7 @@
 namespace login\control;
 
 require_once'./src/login/LoginModel.php';
-require_once'./src/login/LoginWithoutAuth.php';
+
 require_once'./src/login/LoginView.php';
 require_once'./src/model/Device.php';
 require_once'./src/control/AppController.php';

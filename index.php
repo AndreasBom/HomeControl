@@ -8,8 +8,6 @@
 //require_once __DIR__ . '/src/common.php';
 require __DIR__ . '/vendor/autoload.php';
 require_once 'src/login/LoginController.php';
-
-require_once 'src/login/LoginWithoutAuth.php';
 require_once'./src/view/AppView.php';
 require_once'./src/view/LayoutView.php';
 require_once'./src/login/LoginFactory.php';
@@ -31,9 +29,7 @@ if(\login\model\LoginModel::getSessionVerificationTriedToLogIn())
 {
     try
     {
-        \login\model\LoginModel::getAccessToken();
-        header('Location: ' . $_SERVER['PHP_SELF']);
-        exit();
+        $appV->runAccessScript();
     }
     //on authorization failure, show error message
     catch(\exceptions\AuthErrorException $ex)
@@ -43,9 +39,8 @@ if(\login\model\LoginModel::getSessionVerificationTriedToLogIn())
 }
 
 
-
-//Mandatory for device state to be updated
-if(isset($_GET['turnOn']) || isset($_GET['turnOff']))
+//Mandatory for device state to be in correct 'state'
+if($appV->didUserChangeStateOnDevice())
 {
     header('Location: ' .$_SERVER['PHP_SELF'] . '?'.$appV->getDeviceMenuQuery());
 }

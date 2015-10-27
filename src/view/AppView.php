@@ -24,6 +24,15 @@ class AppView //implements IView
     private $stateToPreform;
     private $content = '';
 
+
+    public function runAccessScript()
+    {
+        //If user comes back from api.Telldus.com after login attempt. Will run LoginModel::getAccessToken()
+        \login\model\LoginModel::getAccessToken();
+        header('Location: ' . $_SERVER['PHP_SELF']);
+    }
+
+
     public function redirect()
     {
         header('Location: ' . $_SERVER['PHP_SELF']);
@@ -186,11 +195,64 @@ class AppView //implements IView
 
     public function renderSensorList($list)
     {
+        $windsensorList = array();
+
         $ret = "<div class='row'>";
         $ret .= "<ul class='ul_none_decoration'>";
         $ret .= "<h2>List of sensors</h2>";
 
         foreach($list->sensor as $sensor)
+        {
+            if($sensor['wavg'] != null)
+            {
+                //Saves wind sensors in a sepetate list that is processed after this for loop
+                $windsensorList[] = $sensor;
+            }
+            else
+            {
+                $ret .= "<li class='listStyle'>";
+                if(empty($sensor['name']))
+                {
+                    $name = "No Name";
+                }
+                else
+                {
+                    $name = utf8_decode($sensor['name']);
+                }
+                $ret .= "<h3>" . $name . "</h3>";
+                $ret .= "<ul class='ul_none_decoration diminishedTab'>";
+                $ret .= "<li>";
+                $ret .= "<p>ID: " . $sensor['id'] . "</p>";
+                $ret .= "</li>";
+                $ret .= "<li>";
+                $ret .= "<p>Updated: " . $this->convertDate((int)$sensor['lastUpdated']) . "</p>";
+                $ret .= "</li>";
+                $ret .= "<li>";
+                $ret .= "<p>Temperature: ". $sensor['temp']  ."&#176</p>";
+                $ret .= "</li>";
+                $ret .= "<li>";
+                $ret .= "<p>Humidity: ". $sensor['humidity'] ."%</p>";
+                $ret .= "</li>";
+                $ret .= "</ul>";
+                $ret .= "</li>";
+            }
+
+
+
+        }
+        //adding wind sensors
+        $ret .= $this->renderWindSensor($windsensorList);
+        $ret .= "</ul>";
+        $ret .= "</div>";
+
+        return $ret;
+    }
+
+    //If the sensor is a wind meter
+    private function renderWindSensor($list)
+    {
+        $ret = '';
+        foreach($list as $sensor)
         {
             $ret .= "<li class='listStyle'>";
             if(empty($sensor['name']))
@@ -210,21 +272,20 @@ class AppView //implements IView
             $ret .= "<p>Updated: " . $this->convertDate((int)$sensor['lastUpdated']) . "</p>";
             $ret .= "</li>";
             $ret .= "<li>";
-            $ret .= "<p>Temperature: ". $sensor['temp']  ."&#176</p>";
+            $ret .= "<p>Wind: ". $sensor['wavg']  ." m/s</p>";
             $ret .= "</li>";
             $ret .= "<li>";
-            $ret .= "<p>Humidity: ". $sensor['humidity'] ."%</p>";
+            $ret .= "<p>Gust: ". $sensor['wgust'] ." m/s</p>";
+            $ret .= "</li>";
+            $ret .= "<li>";
+            $ret .= "<p>Wind dir: ". $sensor['wdir'] ."&#176</p>";
             $ret .= "</li>";
             $ret .= "</ul>";
             $ret .= "</li>";
-
         }
-        $ret .= "</ul>";
-        $ret .= "</div>";
-
-
 
         return $ret;
+
     }
 
 
@@ -238,6 +299,7 @@ class AppView //implements IView
 
     private function buttonStatusCss($deviceStatus)
     {
+        //appling css depending on state.
         if($deviceStatus == 1)
         {
             $cssArray = array("btn-default", "btn-success");

@@ -31,6 +31,7 @@ class AppController
         $this->sensor = new Sensor();
     }
 
+    //Will run if user is logged in
     public function runApp(AppView $appV, LayoutView $layoutV, ILoginModel $loginM)
     {
         $list = '';
@@ -63,12 +64,14 @@ class AppController
                 }
             }
 
+            //HTMLifies the list
             $bodyContent = $appV->renderDeviceList($list);
         }
 
         if($appV->didUserChooseSensorOnMenu())
         {
             $list = $this->sensor->getListOfSensors();
+            //HTMLifies the list
             $bodyContent = $appV->renderSensorList($list);
         }
 
@@ -80,15 +83,12 @@ class AppController
             //Kills session
             $loginM->logout();
             $appV->redirect();
-
-
         }
 
 
-        $appV->renderDeviceList($list);
-
         $layoutV->renderMenu();
 
+        //Returns HTML (either device or sensor list)
         return $appV->renderAppContent($bodyContent);
     }
 }
