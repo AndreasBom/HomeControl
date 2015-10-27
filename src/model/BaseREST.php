@@ -8,6 +8,8 @@
 
 namespace model;
 
+use login\model\LoginModel;
+
 require_once dirname(__DIR__) . '/common.php';
 
 abstract class BaseREST
@@ -20,7 +22,10 @@ abstract class BaseREST
     {
         if($this->consumer == null)
         {
-            $this->consumer = new \HTTP_OAuth_Consumer(constant('PUBLIC_KEY'), constant('PRIVATE_KEY'), constant('TOKEN'), constant('TOKENSECRET'));
+            //NOT SAFE!! Only use this if you allow users to have access without authentization or if you use another SAVE authentication method.
+            /*$this->consumer = new \HTTP_OAuth_Consumer(constant('PUBLIC_KEY'), constant('PRIVATE_KEY'), constant('TOKEN'), constant('TOKENSECRET'));*/
+
+            $this->consumer = new \HTTP_OAuth_Consumer(constant('PUBLIC_KEY'), constant('PRIVATE_KEY'), LoginModel::getSessionAccessToken(), LoginModel::getSessionAccessTokenSecret());
         }
 
         $response = $this->consumer->sendRequest(constant('REQUEST_URI').$request,$params,'GET');
@@ -39,7 +44,10 @@ abstract class BaseREST
     {
         if($this->consumer == null)
         {
-            $this->consumer = new \HTTP_OAuth_Consumer(constant('PUBLIC_KEY'), constant('PRIVATE_KEY'), constant('TOKEN'), constant('TOKENSECRET'));
+            //NOT SAFE!! Only use this if you allow users to have access without authentization or if you use another SAVE authentication method.
+            /*$this->consumer = new \HTTP_OAuth_Consumer(constant('PUBLIC_KEY'), constant('PRIVATE_KEY'), constant('TOKEN'), constant('TOKENSECRET'));*/
+
+            $this->consumer = new \HTTP_OAuth_Consumer(constant('PUBLIC_KEY'), constant('PRIVATE_KEY'), LoginModel::getSessionAccessToken(), LoginModel::getSessionAccessTokenSecret());
         }
 
 

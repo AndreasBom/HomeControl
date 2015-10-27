@@ -4,13 +4,16 @@
 INSTRUCTIONS:
 Fill in PUBLIC_KEY
 Fill in PRIVATE_KEY
-Fill in TOKEN
-Fill in TOKENSECRET
 
-define BASE_URL, so it points to getAccessToken.php
+(Fill in TOKEN) //ONLY if users are allowed access without authentication from api.telldus.com
+(Fill in TOKENSECRET)//ONLY if users are allowed access without authentication from api.telldus.com
+
+define BASE_URL, so it points to the returning page (from api.telldus.com) that runs the method LoginModel::getAccessToken(). in this application it is index.php.
 
 
 Change this file name to common.php
+
+
 ******************************************************/
 
 
@@ -21,8 +24,8 @@ define('PUBLIC_KEY', '');
 define('PRIVATE_KEY', '');
 
 
-define('TOKEN', '');
-define('TOKENSECRET', '');
+define('TOKEN', '');//ONLY if users are allowed access without authentication from api.telldus.com
+define('TOKENSECRET', '');//ONLY if users are allowed access without authentication from api.telldus.com
 
 define('URL', 'http://api.telldus.com'); //https should be used in production!
 define('REQUEST_TOKEN', constant('URL').'/oauth/requestToken');
